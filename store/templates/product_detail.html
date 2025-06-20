@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row g-4 align-items-start">
+    <div class="col-lg-6">
+      <div class="card p-4 border-0 shadow-sm mb-4">
+        <!-- <img src="{{ product.image.url }}" class="img-fluid rounded mb-3" alt="{{ product.name }}"> -->
+        {% if product.images.all %}
+  <div id="productGallery" class="carousel slide mb-4" data-bs-ride="carousel">
+  <div class="carousel-inner" style="height: 400px; overflow: hidden;">
+    {% for img in product.images.all %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <img src="{{ img.image.url }}" class="d-block w-100 h-100 rounded" style="object-fit: cover;" alt="{{ img.alt_text }}">
+      </div>
+    {% endfor %}
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#productGallery" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#productGallery" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+{% else %}
+  <img src="{{ product.image.url }}" class="img-fluid rounded mb-3" alt="{{ product.name }}">
+{% endif %}
+
+        {# If you have multiple images, you can add a gallery here #}
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card p-4 border-0 shadow-sm mb-4">
+        <h2 class="fw-bold mb-2">{{ product.name }}</h2>
+        <div class="mb-2">
+          <span class="text-warning fs-5">
+            {% for i in "12345"|make_list %}
+              {% if forloop.counter <= product.avg_rating|default:0 %}★{% else %}☆{% endif %}
+            {% endfor %}
+          </span>
+          <span class="text-muted small">{{ reviews|length }} reviews</span>
+        </div>
+        <h4 class="text-success mb-3">${{ product.price }}</h4>
+        <p class="mb-3">{{ product.description }}</p>
+        {# Example for color/size options (if you have them) #}
+        
+        <div class="row mb-3">
+          <div class="col-6">
+            <label class="form-label">Choose Color</label>
+            <select class="form-select form-select-sm">
+              <option>Select</option>
+              <option>Red</option>
+              <option>Blue</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <label class="form-label">Select Size</label>
+            <select class="form-select form-select-sm">
+              <option>Select</option>
+              <option>Small</option>
+              <option>Large</option>
+            </select>
+          </div>
+        </div>
+        
+        <form method="POST" action="{% url 'add_to_cart' product.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary btn-lg rounded-pill w-100">
+            <span class="me-2">Add to Cart</span> <i class="bi bi-cart"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {% include 'partials/reviews.html' %}
+</div>
+{% endblock %}

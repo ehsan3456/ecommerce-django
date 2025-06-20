@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login | My Store{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center min-vh-100" style="background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);">
+  <div class="card shadow-lg p-4 rounded-4" style="width: 100%; max-width: 380px; border: none;">
+    <div class="text-center mb-3">
+      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Login Icon" width="48" class="mb-2"/>
+      <h3 class="fw-bold mb-1">Sign In</h3>
+      <p class="text-muted small">Welcome back! Please login to your account.</p>
+    </div>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger small">{{ form.non_field_errors }}</div>
+      {% endif %}
+      <div class="mb-2">
+        <input type="text" name="username" class="form-control form-control-sm rounded-pill" placeholder="Username" id="{{ form.username.id_for_label }}" required>
+        {% for error in form.username.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-2">
+        <input type="password" name="password" class="form-control form-control-sm rounded-pill" placeholder="Password" id="{{ form.password.id_for_label }}" required>
+        {% for error in form.password.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="d-grid mb-2">
+        <button type="submit" class="btn btn-primary btn-sm rounded-pill">Login</button>
+      </div>
+    </form>
+    <div class="text-center mt-2">
+      <p class="mb-0 small">Don't have an account?
+        <a href="{% url 'register' %}" class="fw-bold text-decoration-none">Register</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - Products{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="mb-4 text-center">
+  <img src="/media/images/covers.jpg" alt="Banner" class="img-fluid rounded-4 shadow mb-4" style="max-height: 320px; object-fit: cover; width: 100%;">
+  <a href="{% url 'home' %}" class="btn btn-outline-secondary {% if not selected_category %}active{% endif %}">All</a>
+  {% for category in categories %}
+    <a href="?category={{ category.slug }}" class="btn btn-outline-secondary {% if selected_category == category.slug %}active{% endif %}">
+      {{ category.name }}
+    </a>
+  {% endfor %}
+</div>
+
+<div class="container my-5">
+  <h2 class="mb-4 text-center">Popular Products</h2>
+  {% if products %}
+  <div class="row">
+    {% for product in products %}
+      <div class="col-md-3 col-sm-6 col-12 mb-4">
+        <div class="card h-100 shadow-sm">
+          <a href="{% url 'product_detail' product.slug %}">
+            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text">{{ product.description|truncatewords:10 }}</p>
+          </div>
+          <div class="card-footer text-center d-flex flex-column gap-2">
+            <strong class="text-primary mb-2">${{ product.price }}</strong>
+            <form method="post" action="{% url 'add_to_cart' product.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-success rounded-pill w-100">Add to Cart</button>
+            </form>
+            <a href="{% url 'product_detail' product.slug %}" class="btn btn-sm btn-outline-primary rounded-pill w-100">View Details</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  {% else %}
+    <div class="alert alert-info text-center">No products available.</div>
+  {% endif %}
+</div>
+{% else %}
+<div class="text-center my-5">
+  <h3>Please <a href="{% url 'login' %}">log in</a> to view products.</h3>
+</div>
+{% endif %}
+{% endblock %}

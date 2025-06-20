@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load form_filters %}
+
+{% block title %}Register | My Store{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center min-vh-100" style="background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);">
+  <div class="card shadow-lg p-4 rounded-4" style="width: 100%; max-width: 380px; border: none;">
+    <div class="text-center mb-3">
+      <img src="https://cdn-icons-png.flaticon.com/512/747/747545.png" alt="Register Icon" width="48" class="mb-2"/>
+      <h3 class="fw-bold mb-1">Create Account</h3>
+      <p class="text-muted small">Sign up to start shopping with us</p>
+    </div>
+
+    <form method="POST" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="mb-2">
+          {{ field|add_class:"form-control form-control-sm rounded-pill" }}
+          <script>
+            document.getElementById("{{ field.id_for_label }}").setAttribute("placeholder", "{{ field.label }}");
+          </script>
+          {% if field.errors %}
+            <div class="text-danger small mt-1">{{ field.errors.as_text|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div class="d-grid mb-2">
+        <button type="submit" class="btn btn-success btn-sm rounded-pill">Register</button>
+      </div>
+    </form>
+
+    <div class="text-center mt-2">
+      <p class="mb-0 small">Already have an account?
+        <a href="{% url 'login' %}" class="fw-bold text-decoration-none">Login</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

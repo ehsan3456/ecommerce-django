@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card shadow rounded-4 p-4 mb-4">
+        <div class="d-flex align-items-center mb-3">
+          <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Profile Icon" width="48" class="me-3"/>
+          <div>
+            <h2 class="fw-bold mb-1">User Profile</h2>
+            <p class="mb-0 text-muted">Welcome, <strong>{{ user.username }}</strong></p>
+          </div>
+        </div>
+        <div class="mb-3">
+          <span class="badge bg-primary">Username:</span> <span class="ms-2">{{ user.username }}</span><br>
+          <span class="badge bg-secondary">Email:</span> <span class="ms-2">{{ user.email }}</span>
+        </div>
+      </div>
+      <div class="card shadow rounded-4 p-4 mb-4">
+        <h4 class="fw-bold mb-3">Your Cart Summary</h4>
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Product</th><th>Qty</th><th>Price</th><th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in cart_items %}
+              <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.product.price }}</td>
+                <td>${{ item.subtotal }}</td>
+              </tr>
+              
+              {% empty %}
+
+              <tr><td colspan="4" class="text-center text-muted">Your cart is empty.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card shadow rounded-4 p-4 mb-4">
+        <h4 class="fw-bold mb-3">Your Orders</h4>
+        {% if orders %}
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Order ID</th>
+                  <th>Full Name</th>
+                  <th>Address</th>
+                  <th>Phone</th>
+                  <th>Total Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in orders %}
+                <tr>
+                  <td>{{ order.id }}</td>
+                  <td>{{ order.full_name }}</td>
+                  <td>{{ order.address }}</td>
+                  <td>{{ order.phone }}</td>
+                  <td>${{ order.total_price }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="alert alert-info text-center">You have no orders yet.</div>
+        {% endif %}
+        <div class="text-end mt-3">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

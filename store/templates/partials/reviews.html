@@ -1,0 +1,117 @@
+{% load form_filters %}
+  {% if user.is_authenticated %}
+    <div class="mt-5">
+      <h5 class="mb-3 fw-bold">Write Your Review</h5>
+      {% if form.errors %}
+        <div class="alert alert-danger">
+          <ul class="mb-0">
+            {% for field in form %}
+              {% for error in field.errors %}
+                <li>{{ error|escape }}</li>
+              {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+              <li>{{ error|escape }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      <form method="POST" class="card border-0 shadow-sm p-4 bg-white">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="id_rating" class="form-label">Rating</label>
+{{ form.rating|add_class:'form-select form-select-sm' }}
+        </div>
+        <div class="mb-3">
+          <label for="id_comment" class="form-label">Your Comment</label>
+{{ form.comment|add_class:"form-control" }}  
+        </div>
+        <button type="submit" class="btn btn-primary rounded-pill px-4 w-100 w-md-auto">Submit Review</button>
+      </form>
+    </div>
+  {% else %}
+    <p class="mt-4 text-muted text-center">You must be logged in to post a review. <a href="{% url 'login' %}">Login</a></p>
+  {% endif %}
+</div>
+
+<div class="mt-5">
+  <h4 class="mb-4 fw-bold">Customer Reviews</h4>
+  {% if reviews %}
+    <div class="row g-4">
+      {% for review in reviews %}
+        <div class="col-12">
+          <div class="card border-0 shadow review-card position-relative bg-white">
+            <div class="card-body p-4">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="avatar-circle text-white bg-gradient d-flex justify-content-center align-items-center shadow-sm">
+                    {# Use first letter of full name if available, else username #}
+                    {% if review.user.get_full_name %}
+                      {{ review.user.get_full_name|first|upper }}
+                    {% else %}
+                      {{ review.user.username|first|upper }}
+                    {% endif %}
+                  </div>
+                  <div>
+                    <h6 class="mb-0 fw-semibold">
+                      {% if review.user.get_full_name %}
+                        {{ review.user.get_full_name }}
+                      {% else %}
+                        {{ review.user.username }}
+                      {% endif %}
+                    </h6>
+                    <div class="text-warning fs-6" aria-label="Rating: {{ review.rating }} out of 5">
+                      {% for i in "12345"|make_list %}
+                        {% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+                <small class="text-muted">{{ review.created_at|date:"M d, Y" }}</small>
+              </div>
+              <p class="mt-2 mb-0 text-body" style="font-size: 1.05rem;">“{{ review.comment }}”</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-light text-center shadow-sm">No reviews yet. Be the first to write one!</div>
+  {% endif %}
+
+
+<style>
+  .review-card {
+    transition: all 0.3s ease-in-out;
+  }
+
+  .review-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  }
+
+  .avatar-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-weight: 600;
+    font-size: 1.2rem;
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+  }
+
+  .bg-gradient {
+    background: linear-gradient(135deg, #6f42c1, #0d6efd);
+  }
+
+  #id_comment.form-control-sm {
+    min-height: 38px;
+    max-height: 90px;
+    font-size: 1rem;
+    resize: vertical;
+  }
+
+  form.card {
+    border-radius: 1rem;
+    margin-top: 1.5rem;
+  }
+</style>

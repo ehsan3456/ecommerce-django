@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+  <div class="card shadow-sm border-0 p-4 text-center" style="max-width: 400px; width: 100%;">
+    <div class="mb-3">
+      <span class="d-inline-block bg-success bg-opacity-10 rounded-circle p-3 mb-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-check-circle-fill text-success" viewBox="0 0 16 16">
+          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.97 11.03a.75.75 0 0 0 1.07 0l3.992-3.992a.75.75 0 1 0-1.06-1.06L7.5 9.44 6.03 7.97a.75.75 0 1 0-1.06 1.06l1.5 1.5z"/>
+        </svg>
+      </span>
+      <h2 class="fw-bold mt-2">Order Placed Successfully!</h2>
+      <p class="text-muted">Thank you for your purchase. Your order has been received and is being processed.</p>
+    </div>
+    <a href="{% url 'home' %}" class="btn btn-primary btn-lg rounded-pill w-100">Back to Home</a>
+  </div>
+</div>
+{% endblock %}
